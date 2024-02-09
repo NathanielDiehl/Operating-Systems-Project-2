@@ -19,7 +19,7 @@ int main() {
 
     FILE* file = fopen("valid_pcb_data.bin", "wb");
 
-
+    fwrite(&numPcbs, sizeof(size_t), 1, file);
     if (fwrite(pcbs, sizeof(ProcessControlBlock), numPcbs, file) != numPcbs) {
         perror("Failed to write PCB data to file");
         fclose(file);

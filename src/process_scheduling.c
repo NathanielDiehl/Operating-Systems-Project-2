@@ -20,18 +20,34 @@ void virtual_cpu(ProcessControlBlock_t *process_control_block)
 
 bool first_come_first_serve(dyn_array_t *ready_queue, ScheduleResult_t *result) 
 {
-    if(ready_queue == NULL)                                            //checks for improper inputs
+
+    if (ready_queue == NULL || result == NULL) {
         return false;
+    }
     
-    //UNUSED(ready_queue);
-    UNUSED(result);
-    //return false;
-    return true;
+    
+
+    size_t num_elements = dyn_array_size(ready_queue);
+    ProcessControlBlock_t* pcbptr;
+
+    for (size_t i = 0; i < num_elements; i++){
+        pcbptr = (ProcessControlBlock_t*)dyn_array_at(ready_queue, i);
+
+        if (pcbptr != NULL){
+
+                printf("burst time: %u", pcbptr->remaining_burst_time);
+                printf("priority: %u",pcbptr->priority);
+                printf("arrival time: %u",pcbptr->arrival);
+        }
+
+    }
+
+    return false;
 }
 
 bool shortest_job_first(dyn_array_t *ready_queue, ScheduleResult_t *result) 
 {
-    if(ready_queue == NULL)                                       //checks for improper inputs
+    if(ready_queue == NULL || result == NULL)                                       //checks for improper inputs
         return false;
     return true;
 
@@ -42,7 +58,7 @@ bool shortest_job_first(dyn_array_t *ready_queue, ScheduleResult_t *result)
 
 bool priority(dyn_array_t *ready_queue, ScheduleResult_t *result) 
 {
-    if(ready_queue == NULL)                                       //checks for improper inputs
+    if(ready_queue == NULL || result == NULL)                                       //checks for improper inputs
         return false;
     return true;
     
@@ -53,7 +69,7 @@ bool priority(dyn_array_t *ready_queue, ScheduleResult_t *result)
 
 bool round_robin(dyn_array_t *ready_queue, ScheduleResult_t *result, size_t quantum) 
 {
-    if(ready_queue == NULL)                                       //checks for improper inputs
+    if(ready_queue == NULL || result == NULL)                                       //checks for improper inputs
         return false;
     return true;
     
@@ -96,7 +112,7 @@ dyn_array_t *load_process_control_blocks(const char *input_file)
 
 bool shortest_remaining_time_first(dyn_array_t *ready_queue, ScheduleResult_t *result) 
 {
-    if(ready_queue == NULL)                                       //checks for improper inputs
+    if(ready_queue == NULL || result == NULL)                                       //checks for improper inputs
         return false;
     return true;
     

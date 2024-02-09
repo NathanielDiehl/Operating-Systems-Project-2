@@ -54,7 +54,7 @@ TEST(load_process_control_blocks, SuccessfulLoad)
     dyn_array_t* pcb_array = load_process_control_blocks(input_file);    
     
     ASSERT_TRUE(pcb_array != NULL);
-    ASSERT_EQ(dyn_array_size(pcb_array), 3);
+    ASSERT_EQ(dyn_array_size(pcb_array), (size_t)3);
 
     dyn_array_destroy(pcb_array);
 }
@@ -62,33 +62,39 @@ TEST(load_process_control_blocks, SuccessfulLoad)
 
 TEST(first_come_first_serve, BadInput)
 {
-    //dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
-    ScheduleResult_t *result = NULL;
-    ASSERT_EQ(first_come_first_serve(NULL,result),false);
+    dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t result;
+    ASSERT_EQ(first_come_first_serve(ready_queue,NULL),false);
+    ASSERT_EQ(first_come_first_serve(NULL,&result),false);
 }
 TEST(shortest_job_first, BadInput)
 {
-    //dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
-    ScheduleResult_t *result = NULL;
-    ASSERT_EQ(first_come_first_serve(NULL,result),false);
+    dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t result;
+    ASSERT_EQ(shortest_job_first(ready_queue,NULL),false);
+    ASSERT_EQ(shortest_job_first(NULL,&result),false);
 }
 TEST(priority, BadInput)
 {
-    //dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
-    ScheduleResult_t *result = NULL;
-    ASSERT_EQ(first_come_first_serve(NULL,result),false);
+    dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t result;
+    ASSERT_EQ(priority(ready_queue,NULL),false);
+    ASSERT_EQ(priority(NULL,&result),false);
 }
 TEST(round_robin, BadInput)
 {
-    //dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
-    ScheduleResult_t *result = NULL;
-    ASSERT_EQ(first_come_first_serve(NULL,result),false);
+    dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t result;
+    size_t quantum = 0;
+    ASSERT_EQ(round_robin(ready_queue,NULL,quantum),false);
+    ASSERT_EQ(round_robin(NULL,&result,quantum),false);
 }
 TEST(shortest_remaining_time_first, BadInput)
 {
-    //dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
-    ScheduleResult_t *result = NULL;
-    ASSERT_EQ(first_come_first_serve(NULL,result),false);
+    dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t result;
+    ASSERT_EQ(shortest_remaining_time_first(ready_queue,NULL),false);
+    ASSERT_EQ(shortest_remaining_time_first(NULL,&result),false);
 }
 
 

@@ -42,3 +42,5 @@ target_link_libraries(${PROJECT_NAME}_test gtest pthread dyn_array)
 
 # Add Files
 file(COPY pcb.bin DESTINATION .)
+file(COPY test/valid_pcb_data.bin DESTINATION .)
+
