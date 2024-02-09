@@ -17,6 +17,34 @@ extern "C"
 unsigned int score;
 unsigned int total;
 
+
+
+
+
+
+
+/*TEST(dyn_array_create, ValidCapacity)
+{
+    ASSERT_EQ(true,true);
+    //ASSERT_EQ(dyn_array_create(0,0,NULL),NULL);
+}
+
+TEST(dyn_array_insert, IncreasedMemorySize)
+{
+    ASSERT_EQ(true,true);
+}*/
+
+TEST(load_process_control_blocks, BadInput)
+{
+    ASSERT_EQ(load_process_control_blocks(NULL),(dyn_array_t*)NULL);
+}
+
+
+
+
+
+
+
 class GradeEnvironment : public testing::Environment 
 {
     public:
