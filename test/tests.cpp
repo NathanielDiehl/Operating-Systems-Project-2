@@ -37,11 +37,48 @@ TEST(dyn_array_insert, IncreasedMemorySize)
 TEST(load_process_control_blocks, BadInput)
 {
     ASSERT_EQ(load_process_control_blocks(NULL),(dyn_array_t*)NULL);
+    ASSERT_EQ(load_process_control_blocks(""),(dyn_array_t*)NULL);
+    ASSERT_EQ(load_process_control_blocks("\n"),(dyn_array_t*)NULL);
+    ASSERT_EQ(load_process_control_blocks("fake.file"),(dyn_array_t*)NULL);
+}
+TEST(load_process_control_blocks, GoodInput)
+{
+    dyn_array_t *d = load_process_control_blocks("pcb.bin");
+    ASSERT_NE(d,(dyn_array_t*)NULL);
 }
 
 
 
-
+TEST(first_come_first_serve, BadInput)
+{
+    //dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t *result = NULL;
+    ASSERT_EQ(first_come_first_serve(NULL,result),false);
+}
+TEST(shortest_job_first, BadInput)
+{
+    //dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t *result = NULL;
+    ASSERT_EQ(first_come_first_serve(NULL,result),false);
+}
+TEST(priority, BadInput)
+{
+    //dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t *result = NULL;
+    ASSERT_EQ(first_come_first_serve(NULL,result),false);
+}
+TEST(round_robin, BadInput)
+{
+    //dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t *result = NULL;
+    ASSERT_EQ(first_come_first_serve(NULL,result),false);
+}
+TEST(shortest_remaining_time_first, BadInput)
+{
+    //dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t *result = NULL;
+    ASSERT_EQ(first_come_first_serve(NULL,result),false);
+}
 
 
 

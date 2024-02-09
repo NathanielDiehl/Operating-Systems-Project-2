@@ -37,3 +37,8 @@ target_compile_definitions(${PROJECT_NAME}_test PRIVATE)
 
 # Link ${PROJECT_NAME}_test with dyn_array and gtest and pthread libraries
 target_link_libraries(${PROJECT_NAME}_test gtest pthread dyn_array)
+
+
+
+# Add Files
+file(COPY pcb.bin DESTINATION .)
