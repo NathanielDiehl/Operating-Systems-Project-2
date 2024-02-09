@@ -71,12 +71,7 @@ dyn_array_t *load_process_control_blocks(const char *input_file)
     FILE* f = fopen(input_file, "r");
     if(f == NULL)                                                                                             //checks if file opens correctly
         return NULL;
-    //int f = open(input_file, O_RDONLY);                                         //opens file
-	//if(f == -1)                                                                     //checks that file open											
-	//	return NULL;
 
-    //return (dyn_array_t *)1;
-    ///*
     uint32_t number_of_process_control;
     fread(&number_of_process_control, sizeof(uint32_t), 1, f);                                                 //reads lines and stores it to buffer
 
@@ -93,12 +88,8 @@ dyn_array_t *load_process_control_blocks(const char *input_file)
         }
     }
 
-    //close(f);
     fclose(f);
-    return d;//(dyn_array_t *)1;//d;
-    //*/
-
-
+    return d;
     //UNUSED(input_file);
     //return NULL;
 }
