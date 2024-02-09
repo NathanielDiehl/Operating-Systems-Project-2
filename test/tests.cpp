@@ -47,6 +47,17 @@ TEST(load_process_control_blocks, GoodInput)
     ASSERT_NE(d,(dyn_array_t*)NULL);
 }
 
+//test if the input file vaild and the PCB number is correct
+TEST(load_process_control_blocks, SuccessfulLoad) 
+{
+    const char* input_file = "valid_pcb_data.bin";
+    dyn_array_t* pcb_array = load_process_control_blocks(input_file);    
+    
+    ASSERT_TRUE(pcb_array != NULL);
+    ASSERT_EQ(dyn_array_size(pcb_array), 3);
+
+    dyn_array_destroy(pcb_array);
+}
 
 
 TEST(first_come_first_serve, BadInput)
