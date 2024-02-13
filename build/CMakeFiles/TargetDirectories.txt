@@ -1,5 +1,0 @@
-C:/Users/yswang/Desktop/CIS 520/hw2/build/CMakeFiles/dyn_array.dir
-C:/Users/yswang/Desktop/CIS 520/hw2/build/CMakeFiles/hw2_analysis.dir
-C:/Users/yswang/Desktop/CIS 520/hw2/build/CMakeFiles/hw2_test.dir
-C:/Users/yswang/Desktop/CIS 520/hw2/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/yswang/Desktop/CIS 520/hw2/build/CMakeFiles/ZERO_CHECK.dir
