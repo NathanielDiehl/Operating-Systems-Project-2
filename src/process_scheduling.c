@@ -17,7 +17,7 @@ void virtual_cpu(ProcessControlBlock_t *process_control_block)
     // decrement the burst time of the pcb
     --process_control_block->remaining_burst_time;
 }
-
+/*
 bool first_come_first_serve(dyn_array_t *ready_queue, ScheduleResult_t *result) 
 {
 
@@ -43,6 +43,54 @@ bool first_come_first_serve(dyn_array_t *ready_queue, ScheduleResult_t *result)
     }
 
     return false;
+}
+*/
+bool first_come_first_serve(dyn_array_t *ready_queue, ScheduleResult_t *result) {
+   if (ready_queue == NULL || result == NULL) {
+        return false; // Validate input parameters
+    }
+
+    size_t num_elements = dyn_array_size(ready_queue);
+    if (num_elements == 0) {
+        return false; // No PCBs to process
+    }
+
+    ProcessControlBlock_t *pcbptr;
+    size_t currentTime = 0;
+    size_t totalWaitingTime = 0;
+    size_t totalTurnaroundTime = 0;
+
+    for (size_t i = 0; i < num_elements; i++) {
+    pcbptr = (ProcessControlBlock_t*)dyn_array_at(ready_queue, i);
+
+    if (pcbptr != NULL) {
+            
+            if (pcbptr->arrival > currentTime) {
+                currentTime = pcbptr->arrival;
+            }
+
+            size_t startTime = currentTime; 
+            size_t endTime = startTime + pcbptr->remaining_burst_time;
+
+            
+            size_t waitingTime = startTime - pcbptr->arrival; // This will now be 0 or positive.
+            size_t turnaroundTime = endTime - pcbptr->arrival; 
+            totalWaitingTime += waitingTime;
+            totalTurnaroundTime += turnaroundTime;
+
+            // Update the current time to the end time of the process.
+            currentTime = endTime;
+
+            // Print PCB information
+            printf("PCB #%zu: Start Time: %zu, End Time: %zu, Waiting Time: %zu, Turnaround Time: %zu\n", i+1, startTime, endTime, waitingTime, turnaroundTime);
+        }
+    }
+
+    // Calculate average waiting and turnaround times.
+    result->average_waiting_time = (float)totalWaitingTime / num_elements;
+    result->average_turnaround_time = (float)totalTurnaroundTime / num_elements;
+    result->total_run_time = currentTime; // Total run time is the current time after all PCBs have been processed.
+    return true;
 }
 
 bool shortest_job_first(dyn_array_t *ready_queue, ScheduleResult_t *result) 

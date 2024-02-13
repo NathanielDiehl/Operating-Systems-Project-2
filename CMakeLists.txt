@@ -17,15 +17,12 @@ include_directories(.)
 include_directories(include)
 include_directories(src)
 
-
-
 # Create library from dyn_array so we can use it later.
 #target_compile_definitions(dyn_array src/dyn_array.c)
 add_library(dyn_array src/dyn_array.c)
 
 # Compile the analysis executable.
 add_executable(${PROJECT_NAME}_analysis src/analysis.c src/dyn_array.c src/process_scheduling.c)
-
 
 # link the dyn_array library we compiled against our analysis executable.
 target_link_libraries(${PROJECT_NAME}_analysis pthread dyn_array)
@@ -37,8 +34,6 @@ target_compile_definitions(${PROJECT_NAME}_test PRIVATE)
 
 # Link ${PROJECT_NAME}_test with dyn_array and gtest and pthread libraries
 target_link_libraries(${PROJECT_NAME}_test gtest pthread dyn_array)
-
-
 
 # Add Files
 file(COPY pcb.bin DESTINATION .)
