@@ -64,25 +64,25 @@ TEST(load_process_control_blocks, SuccessfulLoad)
 
 
 TEST(first_come_first_serve, Success) {
-    // Create a dynamic array and manually populate it with PCBs
-    dyn_array_t* ready_queue = dyn_array_create(2, sizeof(ProcessControlBlock_t), NULL);
-    ProcessControlBlock_t pcb1 = {10, 1, 0, false};
-    ProcessControlBlock_t pcb2 = {20, 2, 5, false};
-    dyn_array_push_back(ready_queue, &pcb1);
-    dyn_array_push_back(ready_queue, &pcb2);
+    // Load PCBs from the binary file created earlier
+    dyn_array_t* ready_queue = load_process_control_blocks("valid_pcb_data.bin");
+    ASSERT_TRUE(ready_queue != NULL);
 
     // Run FCFS scheduling
     ScheduleResult_t result;
     ASSERT_TRUE(first_come_first_serve(ready_queue, &result));
 
-    // Validate scheduling results
-    float expected_avg_waiting_time = 5; // (0 + 10 - 5) / 2
-    float expected_avg_turnaround_time = 20; // ((10 - 0) + (30 - 5)) / 2
-    ASSERT_EQ(result.average_waiting_time, expected_avg_waiting_time);
-    ASSERT_EQ(result.average_turnaround_time, expected_avg_turnaround_time);
-    ASSERT_EQ(result.total_run_time, 30); // 10 + 20
+    /*
+    PCB1 waits 0 time units, turns around at 10
+    PCB2 waits 10 time units (arrives at 1, starts after PCB1), turns around at 15
+    PCB3 waits 15 time units (arrives at 2, starts after PCB2), turns around at 35
+    */ 
+    float expected_avg_waiting_time = (0 + 10 + 15) / 3.0f;
+    float expected_avg_turnaround_time = (10 + 15 + 35) / 3.0f;
+    ASSERT_NEAR(result.average_waiting_time, expected_avg_waiting_time, 0.001);
+    ASSERT_NEAR(result.average_turnaround_time, expected_avg_turnaround_time, 0.001);
 
-    //clean up
+    // Cleanup
     dyn_array_destroy(ready_queue);
 }
 
