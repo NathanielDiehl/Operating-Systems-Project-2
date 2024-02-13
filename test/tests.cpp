@@ -123,6 +123,27 @@ TEST(first_come_first_serve, BadInput)
     //clean up
     dyn_array_destroy(ready_queue);
 }
+TEST(first_come_first_serve, GoodTurnAround){
+    dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t result;
+    first_come_first_serve(ready_queue,&result);
+    ASSERT_EQ(result.average_turnaround_time,28.50);
+}
+
+TEST(first_come_first_serve, GoodWait){
+    dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t result;
+    first_come_first_serve(ready_queue,&result);
+    ASSERT_EQ(result.average_waiting_time,16.00);
+}
+
+TEST(first_come_first_serve, GoodTotal){
+    dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t result;
+    first_come_first_serve(ready_queue,&result);
+    ASSERT_EQ(result.total_run_time,50.00);
+}
+
 TEST(shortest_job_first, BadInput)
 {
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
