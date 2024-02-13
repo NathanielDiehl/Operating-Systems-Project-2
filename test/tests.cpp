@@ -50,17 +50,20 @@ TEST(load_process_control_blocks, GoodInput)
 //test if the input file vaild and the PCB number is correct
 TEST(load_process_control_blocks, SuccessfulLoad) 
 {
+    // Load PCB
     const char* input_file = "valid_pcb_data.bin";
     dyn_array_t* pcb_array = load_process_control_blocks(input_file);    
     
+    // Validate PCB data
     ASSERT_TRUE(pcb_array != NULL);
     ASSERT_EQ(dyn_array_size(pcb_array), (size_t)3);
 
+    //clean up
     dyn_array_destroy(pcb_array);
 }
 
 
-TEST(first_come_first_serve, FCFS_Success) {
+TEST(first_come_first_serve, Success) {
     // Create a dynamic array and manually populate it with PCBs
     dyn_array_t* ready_queue = dyn_array_create(2, sizeof(ProcessControlBlock_t), NULL);
     ProcessControlBlock_t pcb1 = {10, 1, 0, false};
@@ -79,6 +82,19 @@ TEST(first_come_first_serve, FCFS_Success) {
     ASSERT_EQ(result.average_turnaround_time, expected_avg_turnaround_time);
     ASSERT_EQ(result.total_run_time, 30); // 10 + 20
 
+    //clean up
+    dyn_array_destroy(ready_queue);
+}
+
+TEST(first_come_first_serve, Empty_file) {
+    // Create an empty ready queue
+    dyn_array_t* ready_queue = dyn_array_create(0, sizeof(ProcessControlBlock_t), NULL);
+
+    // Run FCFS scheduling
+    ScheduleResult_t result;
+    ASSERT_FALSE(first_come_first_serve(ready_queue, &result));
+
+    // Cleanup
     dyn_array_destroy(ready_queue);
 }
 
@@ -88,6 +104,9 @@ TEST(first_come_first_serve, BadInput)
     ScheduleResult_t result;
     ASSERT_EQ(first_come_first_serve(ready_queue,NULL),false);
     ASSERT_EQ(first_come_first_serve(NULL,&result),false);
+
+    //clean up
+    dyn_array_destroy(ready_queue);
 }
 TEST(shortest_job_first, BadInput)
 {
@@ -95,6 +114,9 @@ TEST(shortest_job_first, BadInput)
     ScheduleResult_t result;
     ASSERT_EQ(shortest_job_first(ready_queue,NULL),false);
     ASSERT_EQ(shortest_job_first(NULL,&result),false);
+
+    //clean up
+    dyn_array_destroy(ready_queue);
 }
 TEST(priority, BadInput)
 {
@@ -102,6 +124,9 @@ TEST(priority, BadInput)
     ScheduleResult_t result;
     ASSERT_EQ(priority(ready_queue,NULL),false);
     ASSERT_EQ(priority(NULL,&result),false);
+
+    //clean up
+    dyn_array_destroy(ready_queue);
 }
 TEST(round_robin, BadInput)
 {
@@ -110,6 +135,9 @@ TEST(round_robin, BadInput)
     size_t quantum = 0;
     ASSERT_EQ(round_robin(ready_queue,NULL,quantum),false);
     ASSERT_EQ(round_robin(NULL,&result,quantum),false);
+
+    //clean up
+    dyn_array_destroy(ready_queue);
 }
 TEST(shortest_remaining_time_first, BadInput)
 {
@@ -117,6 +145,9 @@ TEST(shortest_remaining_time_first, BadInput)
     ScheduleResult_t result;
     ASSERT_EQ(shortest_remaining_time_first(ready_queue,NULL),false);
     ASSERT_EQ(shortest_remaining_time_first(NULL,&result),false);
+
+    //clean up
+    dyn_array_destroy(ready_queue);
 }
 
 
