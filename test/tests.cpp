@@ -58,6 +58,21 @@ TEST(load_process_control_blocks, SuccessfulLoad)
     ASSERT_TRUE(pcb_array != NULL);
     ASSERT_EQ(dyn_array_size(pcb_array), (size_t)3);
 
+    ProcessControlBlock_t* pcb = dyn_array_at(pcb_array, 0);
+    ASSERT_EQ(pcb->remaining_burst_time, 10);
+    ASSERT_EQ(pcb->priority, 1);
+    ASSERT_EQ(pcb->arrival, 0);
+
+    pcb = dyn_array_at(pcb_array, 1);
+    ASSERT_EQ(pcb->remaining_burst_time, 5);
+    ASSERT_EQ(pcb->priority, 2);
+    ASSERT_EQ(pcb->arrival, 1);
+
+    pcb = dyn_array_at(pcb_array, 2);
+    ASSERT_EQ(pcb->remaining_burst_time, 20);
+    ASSERT_EQ(pcb->priority, 3);
+    ASSERT_EQ(pcb->arrival, 2);
+
     //clean up
     dyn_array_destroy(pcb_array);
 }
@@ -74,8 +89,8 @@ TEST(first_come_first_serve, Success) {
 
     /*
     PCB1 waits 0 time units, turns around at 10
-    PCB2 waits 10 time units (arrives at 1, starts after PCB1), turns around at 15
-    PCB3 waits 15 time units (arrives at 2, starts after PCB2), turns around at 35
+    PCB2 waits 10 time units, turns around at 15
+    PCB3 waits 15 time units, turns around at 35
     */ 
     float expected_avg_waiting_time = (0 + 10 + 15) / 3.0f;
     float expected_avg_turnaround_time = (10 + 15 + 35) / 3.0f;
