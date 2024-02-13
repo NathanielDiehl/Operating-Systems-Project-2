@@ -11,56 +11,60 @@
 // remove it before you submit. Just allows things to compile initially.
 #define UNUSED(x) (void)(x)
 
+// Compare functions
+int compare_remaining_burst_time(const void *a, const void *b) {
+  
+    ProcessControlBlock_t *A = (ProcessControlBlock_t *)a;
+    ProcessControlBlock_t *B = (ProcessControlBlock_t *)b;
+  
+    return (A->remaining_burst_time - B->remaining_burst_time);
+}
+int compare_priority(const void *a, const void *b) {
+  
+    ProcessControlBlock_t *A = (ProcessControlBlock_t *)a;
+    ProcessControlBlock_t *B = (ProcessControlBlock_t *)b;
+  
+    return (A->priority - B->priority);
+}
+int compare_arrival(const void *a, const void *b) {
+  
+    ProcessControlBlock_t *A = (ProcessControlBlock_t *)a;
+    ProcessControlBlock_t *B = (ProcessControlBlock_t *)b;
+  
+    return (A->arrival - B->arrival);
+}
+
+
+
+
+
 // private function
 void virtual_cpu(ProcessControlBlock_t *process_control_block) 
 {
     // decrement the burst time of the pcb
     --process_control_block->remaining_burst_time;
 }
-/*
-bool first_come_first_serve(dyn_array_t *ready_queue, ScheduleResult_t *result) 
-{
 
+bool check_inputs(dyn_array_t *ready_queue, ScheduleResult_t *result, size_t* num_elements) {
     if (ready_queue == NULL || result == NULL) {
-        return false;
-    }
-    
-    
-
-    size_t num_elements = dyn_array_size(ready_queue);
-    ProcessControlBlock_t* pcbptr;
-
-    for (size_t i = 0; i < num_elements; i++){
-        pcbptr = (ProcessControlBlock_t*)dyn_array_at(ready_queue, i);
-
-        if (pcbptr != NULL){
-
-                printf("burst time: %u", pcbptr->remaining_burst_time);
-                printf("priority: %u",pcbptr->priority);
-                printf("arrival time: %u",pcbptr->arrival);
-        }
-
-    }
-
-    return false;
-}
-*/
-bool first_come_first_serve(dyn_array_t *ready_queue, ScheduleResult_t *result) {
-   if (ready_queue == NULL || result == NULL) {
         return false; // Validate input parameters
     }
 
-    size_t num_elements = dyn_array_size(ready_queue);
-    if (num_elements == 0) {
+    *num_elements = dyn_array_size(ready_queue);
+    if (*num_elements == 0) {
         return false; // No PCBs to process
     }
 
+    return true;
+}
+
+void run_ready_queue(dyn_array_t *ready_queue, ScheduleResult_t *result, size_t* num_elements) {
     ProcessControlBlock_t *pcbptr;
     size_t currentTime = 0;
     size_t totalWaitingTime = 0;
     size_t totalTurnaroundTime = 0;
 
-    for (size_t i = 0; i < num_elements; i++) {
+    for (size_t i = 0; i < *num_elements; i++) {
     pcbptr = (ProcessControlBlock_t*)dyn_array_at(ready_queue, i);
 
     if (pcbptr != NULL) {
@@ -87,32 +91,45 @@ bool first_come_first_serve(dyn_array_t *ready_queue, ScheduleResult_t *result) 
     }
 
     // Calculate average waiting and turnaround times.
-    result->average_waiting_time = (float)totalWaitingTime / num_elements;
-    result->average_turnaround_time = (float)totalTurnaroundTime / num_elements;
+    result->average_waiting_time = (float)totalWaitingTime / *num_elements;
+    result->average_turnaround_time = (float)totalTurnaroundTime / *num_elements;
     result->total_run_time = currentTime; // Total run time is the current time after all PCBs have been processed.
+}
+
+
+bool first_come_first_serve(dyn_array_t *ready_queue, ScheduleResult_t *result) {
+    size_t num_elements;
+    if ( !check_inputs(ready_queue, result, &num_elements)) {             // Validate input parameters
+        return false; 
+    }
+
+    dyn_array_sort(ready_queue, compare_arrival);
+    run_ready_queue(ready_queue, result, &num_elements);
     return true;
 }
 
 bool shortest_job_first(dyn_array_t *ready_queue, ScheduleResult_t *result) 
 {
-    if(ready_queue == NULL || result == NULL)                                       //checks for improper inputs
-        return false;
-    return true;
+    size_t num_elements;
+    if ( !check_inputs(ready_queue, result, &num_elements)) {             // Validate input parameters
+        return false; 
+    }
 
-    //UNUSED(ready_queue);
-    UNUSED(result);
-    //return false;   
+    dyn_array_sort(ready_queue, compare_remaining_burst_time);
+    run_ready_queue(ready_queue, result, &num_elements);
+    return true;
 }
 
 bool priority(dyn_array_t *ready_queue, ScheduleResult_t *result) 
 {
-    if(ready_queue == NULL || result == NULL)                                       //checks for improper inputs
-        return false;
-    return true;
+    size_t num_elements;
+    if ( !check_inputs(ready_queue, result, &num_elements)) {             // Validate input parameters
+        return false; 
+    }
     
-    //UNUSED(ready_queue);
-    UNUSED(result);
-    //return false;   
+    dyn_array_sort(ready_queue, compare_priority);
+    run_ready_queue(ready_queue, result, &num_elements);
+    return true;
 }
 
 bool round_robin(dyn_array_t *ready_queue, ScheduleResult_t *result, size_t quantum) 
@@ -160,11 +177,12 @@ dyn_array_t *load_process_control_blocks(const char *input_file)
 
 bool shortest_remaining_time_first(dyn_array_t *ready_queue, ScheduleResult_t *result) 
 {
-    if(ready_queue == NULL || result == NULL)                                       //checks for improper inputs
-        return false;
-    return true;
+    size_t num_elements;
+    if ( !check_inputs(ready_queue, result, &num_elements)) {             // Validate input parameters
+        return false; 
+    }
     
-    //UNUSED(ready_queue);
-    UNUSED(result);
-    //return false;
+    dyn_array_sort(ready_queue, compare_remaining_burst_time);
+    run_ready_queue(ready_queue, result, &num_elements);
+    return true;
 }

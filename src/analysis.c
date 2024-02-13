@@ -27,6 +27,8 @@ int main(int argc, char **argv)
         return EXIT_FAILURE; // Exit if PCBs couldn't be loaded
     }
 
+
+
     // Initialize the structure to store the results of the scheduling
     ScheduleResult_t result;
 
@@ -47,7 +49,6 @@ int main(int argc, char **argv)
     dyn_array_destroy(pcb_dyn_array);
 
 
-    abort();  // replace me with implementation.
 
     return EXIT_SUCCESS;
 }
