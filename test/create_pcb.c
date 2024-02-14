@@ -6,14 +6,13 @@ typedef struct {
     uint32_t remaining_burst_time;
     uint32_t priority;
     uint32_t arrival;
-    bool started;
 } ProcessControlBlock;
 
 int main() {
     ProcessControlBlock pcbs[] = {
-        {10, 1, 0, false},
-        {5, 2, 1, false},
-        {20, 3, 2, false}
+        {10, 1, 0},
+        {5, 2, 1},
+        {20, 3, 2}
     };
     size_t numPcbs = sizeof(pcbs) / sizeof(pcbs[0]);
 
