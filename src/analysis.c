@@ -21,9 +21,7 @@ int main(int argc, char **argv)
     }
     const char* input_file = argv[1]; // Path to the binary file containing PCBs
     if (strcmp(argv[2], "FCFS") != 0) {
-        printf("Not implemented yet...\n");
-    } else {
-    // Load PCBs from the binary file into a dynamic array
+        // Load PCBs from the binary file into a dynamic array
         dyn_array_t* pcb_dyn_array = load_process_control_blocks(input_file);
         if (pcb_dyn_array == NULL) {
             fprintf(stderr, "Failed to load PCBs from file: %s\n", input_file);
@@ -51,9 +49,135 @@ int main(int argc, char **argv)
         // Clean up by destroying the dynamic array of PCBs
         dyn_array_destroy(pcb_dyn_array);
 
+    }
+     else if(strcmp(argv[2], "SJF")) {
+
+          dyn_array_t* pcb_dyn_array = load_process_control_blocks(input_file);
+        if (pcb_dyn_array == NULL) {
+            fprintf(stderr, "Failed to load PCBs from file: %s\n", input_file);
+            return EXIT_FAILURE; // Exit if PCBs couldn't be loaded
+        }
+
+
+
+        // Initialize the structure to store the results of the scheduling
+        ScheduleResult_t result;
+
+        // Run the First Come First Serve scheduling algorithm
+        if (!shortest_job_first(pcb_dyn_array, &result)) {
+            fprintf(stderr, "SJF scheduling failed.\n");
+            dyn_array_destroy(pcb_dyn_array); // Clean up the dynamic array
+            return EXIT_FAILURE; // Exit if scheduling failed
+        }
+
+        // Output the results of the scheduling
+        printf("SJF Scheduling Results:\n");
+        printf("Average Waiting Time: %.2f\n", result.average_waiting_time);
+        printf("Average Turnaround Time: %.2f\n", result.average_turnaround_time);
+        printf("Total Run Time: %lu\n", result.total_run_time);
+
+        // Clean up by destroying the dynamic array of PCBs
+        dyn_array_destroy(pcb_dyn_array);
+
+
+    }
+    else if(strcmp(argv[2], "P")) {
+
+          dyn_array_t* pcb_dyn_array = load_process_control_blocks(input_file);
+        if (pcb_dyn_array == NULL) {
+            fprintf(stderr, "Failed to load PCBs from file: %s\n", input_file);
+            return EXIT_FAILURE; // Exit if PCBs couldn't be loaded
+        }
+
+
+
+        // Initialize the structure to store the results of the scheduling
+        ScheduleResult_t result;
+
+        // Run the First Come First Serve scheduling algorithm
+        if (!priority(pcb_dyn_array, &result)) {
+            fprintf(stderr, "Priority scheduling failed.\n");
+            dyn_array_destroy(pcb_dyn_array); // Clean up the dynamic array
+            return EXIT_FAILURE; // Exit if scheduling failed
+        }
+
+        // Output the results of the scheduling
+        printf("Priority Scheduling Results:\n");
+        printf("Average Waiting Time: %.2f\n", result.average_waiting_time);
+        printf("Average Turnaround Time: %.2f\n", result.average_turnaround_time);
+        printf("Total Run Time: %lu\n", result.total_run_time);
+
+        // Clean up by destroying the dynamic array of PCBs
+        dyn_array_destroy(pcb_dyn_array);
+
 
     }
     
+else if(strcmp(argv[2], "RR")) {
 
+          dyn_array_t* pcb_dyn_array = load_process_control_blocks(input_file);
+        if (pcb_dyn_array == NULL) {
+            fprintf(stderr, "Failed to load PCBs from file: %s\n", input_file);
+            return EXIT_FAILURE; // Exit if PCBs couldn't be loaded
+        }
+
+
+
+        // Initialize the structure to store the results of the scheduling
+        ScheduleResult_t result;
+
+        // Run the First Come First Serve scheduling algorithm
+        if (!round_robin(pcb_dyn_array, &result,argv[3])) {
+            fprintf(stderr, "Round Robin scheduling failed.\n");
+            dyn_array_destroy(pcb_dyn_array); // Clean up the dynamic array
+            return EXIT_FAILURE; // Exit if scheduling failed
+        }
+
+        // Output the results of the scheduling
+        printf("Round Robin Scheduling Results:\n");
+        printf("Average Waiting Time: %.2f\n", result.average_waiting_time);
+        printf("Average Turnaround Time: %.2f\n", result.average_turnaround_time);
+        printf("Total Run Time: %lu\n", result.total_run_time);
+
+        // Clean up by destroying the dynamic array of PCBs
+        dyn_array_destroy(pcb_dyn_array);
+
+
+    }
+    else if(strcmp(argv[2], "SRTF")) {
+
+          dyn_array_t* pcb_dyn_array = load_process_control_blocks(input_file);
+        if (pcb_dyn_array == NULL) {
+            fprintf(stderr, "Failed to load PCBs from file: %s\n", input_file);
+            return EXIT_FAILURE; // Exit if PCBs couldn't be loaded
+        }
+
+
+
+        // Initialize the structure to store the results of the scheduling
+        ScheduleResult_t result;
+
+        // Run the First Come First Serve scheduling algorithm
+        if (!shortest_remaining_time_first(pcb_dyn_array, &result)) {
+            fprintf(stderr, "SRTF scheduling failed.\n");
+            dyn_array_destroy(pcb_dyn_array); // Clean up the dynamic array
+            return EXIT_FAILURE; // Exit if scheduling failed
+        }
+
+        // Output the results of the scheduling
+        printf("STRF Scheduling Results:\n");
+        printf("Average Waiting Time: %.2f\n", result.average_waiting_time);
+        printf("Average Turnaround Time: %.2f\n", result.average_turnaround_time);
+        printf("Total Run Time: %lu\n", result.total_run_time);
+
+        // Clean up by destroying the dynamic array of PCBs
+        dyn_array_destroy(pcb_dyn_array);
+
+
+    }
+    else{
+        printf("Not a scheduling algorithm");
+    }
+    
     return EXIT_SUCCESS;
 }
