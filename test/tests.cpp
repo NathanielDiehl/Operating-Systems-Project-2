@@ -154,6 +154,27 @@ TEST(shortest_job_first, BadInput)
     //clean up
     dyn_array_destroy(ready_queue);
 }
+TEST(shortest_job_first, GoodTurnAround){
+    dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t result;
+    shortest_job_first(ready_queue,&result);
+    ASSERT_EQ(result.average_turnaround_time,NULL);
+}
+
+TEST(shortest_job_first, GoodWait){
+    dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t result;
+    shortest_job_first(ready_queue,&result);
+    ASSERT_EQ(result.average_waiting_time,NULL);
+}
+
+TEST(shortest_job_first, GoodTotal){
+    dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t result;
+    shortest_job_first(ready_queue,&result);
+    ASSERT_EQ(result.total_run_time,NULL);
+}
+
 TEST(priority, BadInput)
 {
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
@@ -164,6 +185,28 @@ TEST(priority, BadInput)
     //clean up
     dyn_array_destroy(ready_queue);
 }
+
+TEST(priority, GoodTurnAround){
+    dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t result;
+    priority(ready_queue,&result);
+    ASSERT_EQ(result.average_turnaround_time,NULL);
+}
+
+TEST(priority, GoodWait){
+    dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t result;
+    priority(ready_queue,&result);
+    ASSERT_EQ(result.average_waiting_time,NULL);
+}
+
+TEST(priority, GoodTotal){
+    dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t result;
+    priority(ready_queue,&result);
+    ASSERT_EQ(result.total_run_time,NULL);
+}
+
 TEST(round_robin, BadInput)
 {
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
@@ -175,6 +218,29 @@ TEST(round_robin, BadInput)
     //clean up
     dyn_array_destroy(ready_queue);
 }
+
+TEST(round_robin, GoodTurnAround){
+    dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t result;
+    round_robin(ready_queue,&result,4);
+    ASSERT_EQ(result.average_turnaround_time,NULL);
+}
+
+TEST(round_robin, GoodWait){
+    dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t result;
+    round_robin(ready_queue,&result,4);
+    ASSERT_EQ(result.average_waiting_time,NULL);
+}
+
+TEST(round_robin, GoodTotal){
+    dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t result;
+    round_robin(ready_queue,&result,4);
+    ASSERT_EQ(result.total_run_time,NULL);
+}
+
+
 TEST(shortest_remaining_time_first, BadInput)
 {
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
@@ -185,6 +251,33 @@ TEST(shortest_remaining_time_first, BadInput)
     //clean up
     dyn_array_destroy(ready_queue);
 }
+
+
+
+TEST(shortest_remaining_time_first, GoodTurnAround){
+    dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t result;
+    shortest_remaining_time_first(ready_queue,&result);
+    ASSERT_EQ(result.average_turnaround_time,NULL);
+}
+
+TEST(shortest_remaining_time_first, GoodWait){
+    dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t result;
+    shortest_remaining_time_first(ready_queue,&result);
+    ASSERT_EQ(result.average_waiting_time,NULL);
+}
+
+
+TEST(shortest_remaining_time_first, GoodTotal){
+    dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
+    ScheduleResult_t result;
+    shortest_remaining_time_first(ready_queue,&result);
+    ASSERT_EQ(result.total_run_time,NULL);
+}
+
+
+
 
 
 
