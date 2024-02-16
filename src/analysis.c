@@ -127,7 +127,7 @@ else if(strcmp(argv[2], "RR")) {
         ScheduleResult_t result;
 
         // Run the First Come First Serve scheduling algorithm
-        if (!round_robin(pcb_dyn_array, &result,argv[3])) {
+        if (!round_robin(pcb_dyn_array, &result, 3)) { //argv[3])) {
             fprintf(stderr, "Round Robin scheduling failed.\n");
             dyn_array_destroy(pcb_dyn_array); // Clean up the dynamic array
             return EXIT_FAILURE; // Exit if scheduling failed
