@@ -18,8 +18,12 @@ int main(int argc, char **argv)
         printf("%s <pcb file> <schedule algorithm> [quantum]\n", argv[0]);
         return EXIT_FAILURE;
     }
+printf("Arguments provided:\n");
+    for (int i = 0; i < argc; i++) {
+        printf("Argument %d: %s\n", i, argv[i]);
+    }
     const char* input_file = argv[1]; // Path to the binary file containing PCBs
-    if (strcmp(argv[2], "FCFS") != 0) {
+    if (strcmp(argv[2], "FCFS") == 0) {
         // Load PCBs from the binary file into a dynamic array
         dyn_array_t* pcb_dyn_array = load_process_control_blocks(input_file);
         if (pcb_dyn_array == NULL) {
@@ -45,7 +49,7 @@ int main(int argc, char **argv)
         // Clean up by destroying the dynamic array of PCBs
         dyn_array_destroy(pcb_dyn_array);
     }
-     else if(strcmp(argv[2], "SJF")) {
+     else if(strcmp(argv[2], "SJF") == 0) {
 
           dyn_array_t* pcb_dyn_array = load_process_control_blocks(input_file);
         if (pcb_dyn_array == NULL) {
@@ -76,7 +80,7 @@ int main(int argc, char **argv)
 
 
     }
-    else if(strcmp(argv[2], "P")) {
+    else if(strcmp(argv[2], "P") == 0) {
 
           dyn_array_t* pcb_dyn_array = load_process_control_blocks(input_file);
         if (pcb_dyn_array == NULL) {
@@ -107,7 +111,7 @@ int main(int argc, char **argv)
 
 
     }
-    else if(strcmp(argv[2], "RR")) {
+    else if(strcmp(argv[2], "RR") == 0) {
 
           dyn_array_t* pcb_dyn_array = load_process_control_blocks(input_file);
         if (pcb_dyn_array == NULL) {
@@ -138,7 +142,7 @@ int main(int argc, char **argv)
 
 
     }
-    else if(strcmp(argv[2], "SRTF")) {
+    else if(strcmp(argv[2], "SRTF") == 0) {
 
           dyn_array_t* pcb_dyn_array = load_process_control_blocks(input_file);
         if (pcb_dyn_array == NULL) {

@@ -283,7 +283,7 @@ TEST(shortest_remaining_time_first, GoodTotal){
 
 
 
-
+/*
 class GradeEnvironment : public testing::Environment 
 {
     public:
@@ -300,11 +300,11 @@ class GradeEnvironment : public testing::Environment
             std::cout << "SCORE: " << score << '/' << total << std::endl;
         }
 };
-
+*/
 
 int main(int argc, char **argv) 
 {
     ::testing::InitGoogleTest(&argc, argv);
-    ::testing::AddGlobalTestEnvironment(new GradeEnvironment);
+   // ::testing::AddGlobalTestEnvironment(new GradeEnvironment);
     return RUN_ALL_TESTS();
 }
