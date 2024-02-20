@@ -51,27 +51,39 @@ TEST(load_process_control_blocks, GoodInput)
 TEST(load_process_control_blocks, SuccessfulLoad) 
 {
     // Load PCB
-    const char* input_file = "valid_pcb_data.bin";
+    const char* input_file = "pcb.bin";
     dyn_array_t* pcb_array = load_process_control_blocks(input_file);    
     
     // Validate PCB data
     ASSERT_TRUE(pcb_array != NULL);
-    ASSERT_EQ(dyn_array_size(pcb_array), (size_t)3);
+    ASSERT_EQ(dyn_array_size(pcb_array), (size_t)4);
 
     ProcessControlBlock_t* pcb = (ProcessControlBlock_t*)dyn_array_at(pcb_array, 0);
-    ASSERT_EQ(pcb->remaining_burst_time, (uint32_t)10);
-    ASSERT_EQ(pcb->priority, (uint32_t)1);
+    ASSERT_EQ(pcb->remaining_burst_time, (uint32_t)15);
+    ASSERT_EQ(pcb->priority, (uint32_t)0);
     ASSERT_EQ(pcb->arrival, (uint32_t)0);
+    ASSERT_FALSE(pcb->started);
 
     pcb = (ProcessControlBlock_t*)dyn_array_at(pcb_array, 1);
-    ASSERT_EQ(pcb->remaining_burst_time,(uint32_t)5);
-    ASSERT_EQ(pcb->priority, (uint32_t)2);
+    ASSERT_EQ(pcb->remaining_burst_time,(uint32_t)10);
+    ASSERT_EQ(pcb->priority, (uint32_t)0);
     ASSERT_EQ(pcb->arrival, (uint32_t)1);
+    ASSERT_FALSE(pcb->started);
+
     
     pcb = (ProcessControlBlock_t*)dyn_array_at(pcb_array, 2);
-    ASSERT_EQ(pcb->remaining_burst_time, (uint32_t)20);
-    ASSERT_EQ(pcb->priority, (uint32_t)3);
+    ASSERT_EQ(pcb->remaining_burst_time, (uint32_t)5);
+    ASSERT_EQ(pcb->priority, (uint32_t)0);
     ASSERT_EQ(pcb->arrival, (uint32_t)2);
+    ASSERT_FALSE(pcb->started);
+
+
+    pcb = (ProcessControlBlock_t*)dyn_array_at(pcb_array, 3);
+    ASSERT_EQ(pcb->remaining_burst_time, (uint32_t)20);
+    ASSERT_EQ(pcb->priority, (uint32_t)0);
+    ASSERT_EQ(pcb->arrival, (uint32_t)3);
+    ASSERT_FALSE(pcb->started);
+
 
     //clean up
     dyn_array_destroy(pcb_array);
@@ -101,9 +113,9 @@ dyn_array_t* ready_queue = load_process_control_blocks("pcb.bin");
     dyn_array_destroy(ready_queue);
 }
 
-TEST(first_come_first_serve, Empty_file) {
+TEST(first_come_first_serve, MissingFile) {
     // Create an empty ready queue
-    dyn_array_t* ready_queue = dyn_array_create(0, sizeof(ProcessControlBlock_t), NULL);
+    dyn_array_t* ready_queue = load_process_control_blocks("NULL.bin");
 
     // Run FCFS scheduling
     ScheduleResult_t result;
