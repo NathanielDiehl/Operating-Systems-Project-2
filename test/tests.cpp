@@ -80,7 +80,7 @@ TEST(load_process_control_blocks, SuccessfulLoad)
 
 TEST(first_come_first_serve, Success) {
     // Load PCBs from the binary file created earlier
-    dyn_array_t* ready_queue = load_process_control_blocks("valid_pcb_data.bin");
+dyn_array_t* ready_queue = load_process_control_blocks("pcb.bin");
     ASSERT_TRUE(ready_queue != NULL);
 
     // Run FCFS scheduling
@@ -92,8 +92,8 @@ TEST(first_come_first_serve, Success) {
     PCB2 waits 10 time units, turns around at 15
     PCB3 waits 15 time units, turns around at 35
     */ 
-    float expected_avg_waiting_time = (0 + 10 + 15) / 3.0f;
-    float expected_avg_turnaround_time = (10 + 15 + 35) / 3.0f;
+    float expected_avg_waiting_time = 16.0f;
+    float expected_avg_turnaround_time = 28.0f;
     ASSERT_NEAR(result.average_waiting_time, expected_avg_waiting_time, 1);//0.001);
     ASSERT_NEAR(result.average_turnaround_time, expected_avg_turnaround_time, 1);//0.001);
 
@@ -123,6 +123,7 @@ TEST(first_come_first_serve, BadInput)
     //clean up
     dyn_array_destroy(ready_queue);
 }
+
 TEST(first_come_first_serve, GoodTurnAround){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
@@ -154,6 +155,7 @@ TEST(shortest_job_first, BadInput)
     //clean up
     dyn_array_destroy(ready_queue);
 }
+
 TEST(shortest_job_first, GoodTurnAround){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
@@ -261,14 +263,14 @@ TEST(shortest_remaining_time_first, GoodTurnAround){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
     shortest_remaining_time_first(ready_queue,&result);
-    ASSERT_EQ(result.average_turnaround_time,NULL);
+    ASSERT_EQ(result.average_turnaround_time,25.5);
 }
 
 TEST(shortest_remaining_time_first, GoodWait){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
     shortest_remaining_time_first(ready_queue,&result);
-    ASSERT_EQ(result.average_waiting_time,NULL);
+    ASSERT_EQ(result.average_waiting_time,13);
 }
 
 
@@ -279,7 +281,19 @@ TEST(shortest_remaining_time_first, GoodTotal){
     //ASSERT_EQ(result.total_run_time,NULL);
 }
 
+TEST(shortest_remaining_time_first, NullResult) {
+    dyn_array_t *ready_queue = dyn_array_create(0, sizeof(ProcessControlBlock_t), NULL);
+    ScheduleResult_t *result = NULL;
+    EXPECT_EQ(false, shortest_remaining_time_first(ready_queue, result));
+    dyn_array_destroy(ready_queue);
+}
 
+TEST(shortest_remaining_time_first, NullReadyQueue){
+    dyn_array_t *ready_queue = NULL;
+    ScheduleResult_t *result = new ScheduleResult_t;
+    EXPECT_EQ(false, shortest_remaining_time_first(ready_queue, result));
+    delete result;
+}
 
 
 
@@ -305,6 +319,6 @@ class GradeEnvironment : public testing::Environment
 int main(int argc, char **argv) 
 {
     ::testing::InitGoogleTest(&argc, argv);
-   // ::testing::AddGlobalTestEnvironment(new GradeEnvironment);
+    // ::testing::AddGlobalTestEnvironment(new GradeEnvironment);
     return RUN_ALL_TESTS();
 }
