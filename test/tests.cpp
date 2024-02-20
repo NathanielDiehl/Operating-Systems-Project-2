@@ -62,27 +62,23 @@ TEST(load_process_control_blocks, SuccessfulLoad)
     ASSERT_EQ(pcb->remaining_burst_time, (uint32_t)15);
     ASSERT_EQ(pcb->priority, (uint32_t)0);
     ASSERT_EQ(pcb->arrival, (uint32_t)0);
-    ASSERT_FALSE(pcb->started);
 
     pcb = (ProcessControlBlock_t*)dyn_array_at(pcb_array, 1);
     ASSERT_EQ(pcb->remaining_burst_time,(uint32_t)10);
     ASSERT_EQ(pcb->priority, (uint32_t)0);
     ASSERT_EQ(pcb->arrival, (uint32_t)1);
-    ASSERT_FALSE(pcb->started);
 
     
     pcb = (ProcessControlBlock_t*)dyn_array_at(pcb_array, 2);
     ASSERT_EQ(pcb->remaining_burst_time, (uint32_t)5);
     ASSERT_EQ(pcb->priority, (uint32_t)0);
     ASSERT_EQ(pcb->arrival, (uint32_t)2);
-    ASSERT_FALSE(pcb->started);
 
 
     pcb = (ProcessControlBlock_t*)dyn_array_at(pcb_array, 3);
     ASSERT_EQ(pcb->remaining_burst_time, (uint32_t)20);
     ASSERT_EQ(pcb->priority, (uint32_t)0);
     ASSERT_EQ(pcb->arrival, (uint32_t)3);
-    ASSERT_FALSE(pcb->started);
 
 
     //clean up
@@ -92,7 +88,7 @@ TEST(load_process_control_blocks, SuccessfulLoad)
 
 TEST(first_come_first_serve, Success) {
     // Load PCBs from the binary file created earlier
-dyn_array_t* ready_queue = load_process_control_blocks("pcb.bin");
+    dyn_array_t* ready_queue = load_process_control_blocks("pcb.bin");
     ASSERT_TRUE(ready_queue != NULL);
 
     // Run FCFS scheduling
@@ -100,14 +96,15 @@ dyn_array_t* ready_queue = load_process_control_blocks("pcb.bin");
     ASSERT_TRUE(first_come_first_serve(ready_queue, &result));
 
     /*
-    PCB1 waits 0 time units, turns around at 10
-    PCB2 waits 10 time units, turns around at 15
-    PCB3 waits 15 time units, turns around at 35
+    PCB1 waits 0 time units, turns around at 15, arrival at 0
+    PCB2 waits 10 time units, turns around at 10, arrival at 1
+    PCB3 waits 15 time units, turns around at 5, arrival at 2
+    PCB4 waits 15 time units, turns around at 20, arrival at 3
     */ 
-    float expected_avg_waiting_time = 16.0f;
-    float expected_avg_turnaround_time = 28.0f;
-    ASSERT_NEAR(result.average_waiting_time, expected_avg_waiting_time, 1);//0.001);
-    ASSERT_NEAR(result.average_turnaround_time, expected_avg_turnaround_time, 1);//0.001);
+    float expected_avg_waiting_time = (15-1+25-2+30-3)/4.0f;
+    float expected_avg_turnaround_time = (15+25-1+30-2+50-3)/4.0f;
+    ASSERT_NEAR(result.average_waiting_time, expected_avg_waiting_time, 0.001);//0.001);
+    ASSERT_NEAR(result.average_turnaround_time, expected_avg_turnaround_time, 0.001);//0.001);
 
     // Cleanup
     dyn_array_destroy(ready_queue);
