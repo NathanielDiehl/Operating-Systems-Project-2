@@ -96,10 +96,10 @@ TEST(first_come_first_serve, Success) {
     ASSERT_TRUE(first_come_first_serve(ready_queue, &result));
 
     /*
-    PCB1 waits 0 time units, turns around at 15, arrival at 0
-    PCB2 waits 10 time units, turns around at 10, arrival at 1
-    PCB3 waits 15 time units, turns around at 5, arrival at 2
-    PCB4 waits 15 time units, turns around at 20, arrival at 3
+    PCB1 waits 0 time units, turns around at 15, 0 to process arrived
+    PCB2 waits 15 time units, turns around at 25, 1 to process arrived
+    PCB3 waits 25 time units, turns around at 30, 2 to process arrived
+    PCB4 waits 30 time units, turns around at 50, 3 to process arrived
     */ 
     float expected_avg_waiting_time = (15-1+25-2+30-3)/4.0f;
     float expected_avg_turnaround_time = (15+25-1+30-2+50-3)/4.0f;
