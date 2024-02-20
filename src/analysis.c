@@ -14,8 +14,7 @@
 // THIS IS NOT FINISHED.
 int main(int argc, char **argv) 
 {
-    if (argc < 3) 
-    {
+    if (argc < 3) {
         printf("%s <pcb file> <schedule algorithm> [quantum]\n", argv[0]);
         return EXIT_FAILURE;
     }
@@ -27,9 +26,6 @@ int main(int argc, char **argv)
             fprintf(stderr, "Failed to load PCBs from file: %s\n", input_file);
             return EXIT_FAILURE; // Exit if PCBs couldn't be loaded
         }
-
-
-
         // Initialize the structure to store the results of the scheduling
         ScheduleResult_t result;
 
@@ -48,7 +44,6 @@ int main(int argc, char **argv)
 
         // Clean up by destroying the dynamic array of PCBs
         dyn_array_destroy(pcb_dyn_array);
-
     }
      else if(strcmp(argv[2], "SJF")) {
 
@@ -112,8 +107,7 @@ int main(int argc, char **argv)
 
 
     }
-    
-else if(strcmp(argv[2], "RR")) {
+    else if(strcmp(argv[2], "RR")) {
 
           dyn_array_t* pcb_dyn_array = load_process_control_blocks(input_file);
         if (pcb_dyn_array == NULL) {
@@ -178,6 +172,5 @@ else if(strcmp(argv[2], "RR")) {
     else{
         printf("Not a scheduling algorithm");
     }
-    
     return EXIT_SUCCESS;
 }
