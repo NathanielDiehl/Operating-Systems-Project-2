@@ -113,7 +113,7 @@ printf("Arguments provided:\n");
     }
     else if(strcmp(argv[2], "RR") == 0) {
 
-          dyn_array_t* pcb_dyn_array = load_process_control_blocks(input_file);
+        dyn_array_t* pcb_dyn_array = load_process_control_blocks(input_file);
         if (pcb_dyn_array == NULL) {
             fprintf(stderr, "Failed to load PCBs from file: %s\n", input_file);
             return EXIT_FAILURE; // Exit if PCBs couldn't be loaded

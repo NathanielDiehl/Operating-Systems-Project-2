@@ -64,29 +64,21 @@ void run_process(ProcessControlBlock_t *pcbptr, size_t  run_time,
         return;           
     }
 
-    pcbptr->started = true;
-    if(pcbptr->remaining_burst_time < run_time)
-        pcbptr->remaining_burst_time = 0;
-    else
-        pcbptr->remaining_burst_time -= run_time;
-
-    if (pcbptr->arrival > *currentTime) {
-        *currentTime = pcbptr->arrival;
+    if(!pcbptr->started){
+        pcbptr->started = true;
+        if(pcbptr->arrival <= *currentTime)                                  //this can't be right
+            *totalWaitingTime += *currentTime - pcbptr->arrival;
     }
-
-    size_t startTime = *currentTime; 
-    size_t endTime = startTime + run_time;
-
-    size_t waitingTime = startTime - pcbptr->arrival; // This will now be 0 or positive.
-    size_t turnaroundTime = endTime - pcbptr->arrival; 
-    *totalWaitingTime += waitingTime;
-    *totalTurnaroundTime += turnaroundTime;
-
-    // Update the current time to the end time of the process.
-    *currentTime = endTime;
-    // Print PCB information
-    //printf("PCB #%zu: Start Time: %zu, End Time: %zu, Waiting Time: %zu, Turnaround Time: %zu\n", i+1, startTime, endTime, waitingTime, turnaroundTime);
-
+    if(pcbptr->remaining_burst_time <= run_time){
+        *currentTime += pcbptr->remaining_burst_time;
+        pcbptr->remaining_burst_time = 0;
+        if(pcbptr->arrival <= *currentTime)                                  //this can't be right
+            *totalTurnaroundTime += *currentTime - pcbptr->arrival;
+    }
+    else {
+        *currentTime += run_time;
+        pcbptr->remaining_burst_time -= run_time;
+    }
 }
 
 void run_ready_queue(dyn_array_t *ready_queue, ScheduleResult_t *result, size_t* num_elements) {
@@ -97,28 +89,8 @@ void run_ready_queue(dyn_array_t *ready_queue, ScheduleResult_t *result, size_t*
 
     for (size_t i = 0; i < *num_elements; i++) {
         pcbptr = (ProcessControlBlock_t*)dyn_array_at(ready_queue, i);
-
+        
         run_process(pcbptr, pcbptr->remaining_burst_time, &currentTime, &totalWaitingTime, &totalTurnaroundTime);
-        /*if (pcbptr != NULL) {
-                
-            if (pcbptr->arrival > currentTime) {
-                currentTime = pcbptr->arrival;
-            }
-
-            size_t startTime = currentTime; 
-            size_t endTime = startTime + pcbptr->remaining_burst_time;
-
-            size_t waitingTime = startTime - pcbptr->arrival; // This will now be 0 or positive.
-            size_t turnaroundTime = endTime - pcbptr->arrival; 
-            totalWaitingTime += waitingTime;
-            totalTurnaroundTime += turnaroundTime;
-
-            // Update the current time to the end time of the process.
-            currentTime = endTime;
-
-            // Print PCB information
-            printf("PCB #%zu: Start Time: %zu, End Time: %zu, Waiting Time: %zu, Turnaround Time: %zu\n", i+1, startTime, endTime, waitingTime, turnaroundTime);
-        }*/
     }
 
     // Calculate average waiting and turnaround times.
@@ -222,8 +194,6 @@ dyn_array_t *load_process_control_blocks(const char *input_file)
 
     fclose(f);
     return d;
-    //UNUSED(input_file);
-    //return NULL;
 }
 
 bool shortest_remaining_time_first(dyn_array_t *ready_queue, ScheduleResult_t *result) 
@@ -240,7 +210,7 @@ bool shortest_remaining_time_first(dyn_array_t *ready_queue, ScheduleResult_t *r
     size_t totalWaitingTime = 0;
     size_t totalTurnaroundTime = 0;
     
-    while(!dyn_array_empty(ready_queue) ){//pcbptr != NULL){
+    while(!dyn_array_empty(ready_queue) ){
         pcbptr = (ProcessControlBlock_t*)dyn_array_at(ready_queue, 0);
         run_process(pcbptr, 1, &currentTime, &totalWaitingTime, &totalTurnaroundTime);
 
