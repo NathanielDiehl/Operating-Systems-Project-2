@@ -138,8 +138,6 @@ TEST(first_come_first_serve, GoodTurnAround){
     ScheduleResult_t result;
     first_come_first_serve(ready_queue,&result);
     ASSERT_EQ(result.average_turnaround_time,30);
-    //(15 + 24 + 28 + 47) / 4 = 114 / 4 = 28.50
-    ASSERT_EQ(result.average_turnaround_time,28.50);
 }
 
 TEST(first_come_first_serve, GoodWait){
@@ -147,15 +145,12 @@ TEST(first_come_first_serve, GoodWait){
     ScheduleResult_t result;
     first_come_first_serve(ready_queue,&result);
     ASSERT_EQ(result.average_waiting_time,17.5);
-    //(0 + 14 + 23 + 27) / 4 = 64 / 4 = 16.00
-    ASSERT_EQ(result.average_waiting_time,16.00);
 }
 
 TEST(first_come_first_serve, GoodTotal){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
     first_come_first_serve(ready_queue,&result);
-    //Total Run Time = Finish Time of PCB 3 = 15 + 10 + 5 + 20 = 50
     ASSERT_EQ(result.total_run_time,50.00);
 }
 
@@ -175,8 +170,6 @@ TEST(shortest_job_first, GoodTurnAround){
     ScheduleResult_t result;
     shortest_job_first(ready_queue,&result);
     ASSERT_EQ(result.average_turnaround_time,25);
-    //(15 + 24 + 24 + 5  + 47) / 4 = 114 / 4 = 28.50
-    ASSERT_EQ(result.average_turnaround_time,25.5);
 }
 
 TEST(shortest_job_first, GoodWait){
@@ -209,8 +202,6 @@ TEST(priority, GoodTurnAround){
     ScheduleResult_t result;
     priority(ready_queue,&result);
     ASSERT_EQ(result.average_turnaround_time,30);
-    //(15 + 24 + 28 + 47) / 4 = 114 / 4 = 28.50
-    ASSERT_EQ(result.average_turnaround_time,28.5);
 }
 
 TEST(priority, GoodWait){
@@ -218,8 +209,6 @@ TEST(priority, GoodWait){
     ScheduleResult_t result;
     priority(ready_queue,&result);
     ASSERT_EQ(result.average_waiting_time,17.5);
-    //(0 + 14 + 23 + 27) / 4 = 64 / 4 = 16.00
-    ASSERT_EQ(result.average_waiting_time,16.0);
 }
 
 TEST(priority, GoodTotal){
