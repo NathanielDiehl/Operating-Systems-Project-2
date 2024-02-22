@@ -10,8 +10,18 @@
 // You might find this handy.  I put it around unused parameters, but you should
 // remove it before you submit. Just allows things to compile initially.
 #define UNUSED(x) (void)(x)
+size_t current_time = 0;
 
 // Compare functions
+int compare_remaining_burst_time_preemptive(const void *a, const void *b) {
+  
+    ProcessControlBlock_t *A = (ProcessControlBlock_t *)a;
+    ProcessControlBlock_t *B = (ProcessControlBlock_t *)b;
+    bool A_arrived = A->arrival >= current_time;
+    bool B_arrived = A->arrival >= current_time;
+    
+    return (A->remaining_burst_time*A_arrived - B->remaining_burst_time*B_arrived);
+}
 int compare_remaining_burst_time(const void *a, const void *b) {
   
     ProcessControlBlock_t *A = (ProcessControlBlock_t *)a;
@@ -66,14 +76,12 @@ void run_process(ProcessControlBlock_t *pcbptr, size_t  run_time,
 
     if(!pcbptr->started){
         pcbptr->started = true;
-        if(pcbptr->arrival <= *currentTime)                                  //this can't be right
-            *totalWaitingTime += *currentTime - pcbptr->arrival;
+        *totalWaitingTime += *currentTime;
     }
     if(pcbptr->remaining_burst_time <= run_time){
         *currentTime += pcbptr->remaining_burst_time;
         pcbptr->remaining_burst_time = 0;
-        if(pcbptr->arrival <= *currentTime)                                  //this can't be right
-            *totalTurnaroundTime += *currentTime - pcbptr->arrival;
+        *totalTurnaroundTime += *currentTime;
     }
     else {
         *currentTime += run_time;
@@ -106,6 +114,8 @@ bool first_come_first_serve(dyn_array_t *ready_queue, ScheduleResult_t *result) 
         return false; 
     }
 
+    //dyn_array_sort(ready_queue, compare_arrival);
+    //uint32_t currentTime = ((ProcessControlBlock_t*)dyn_array_back(ready_queue))->arrival;
     dyn_array_sort(ready_queue, compare_arrival);
     run_ready_queue(ready_queue, result, &num_elements);
     return true;
@@ -214,8 +224,10 @@ bool shortest_remaining_time_first(dyn_array_t *ready_queue, ScheduleResult_t *r
         pcbptr = (ProcessControlBlock_t*)dyn_array_at(ready_queue, 0);
         run_process(pcbptr, 1, &currentTime, &totalWaitingTime, &totalTurnaroundTime);
 
-        if(pcbptr->remaining_burst_time > 0)
-            dyn_array_insert_sorted(ready_queue, pcbptr, compare_remaining_burst_time);
+        if(pcbptr->remaining_burst_time > 0){
+            current_time = currentTime;
+            dyn_array_insert_sorted(ready_queue, pcbptr, compare_remaining_burst_time); //compare_remaining_burst_time_preemptive);
+        }
         if( !dyn_array_pop_front(ready_queue))
             return false;
     }

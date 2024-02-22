@@ -9,14 +9,27 @@ typedef struct {
 } ProcessControlBlock;
 
 int main() {
-    ProcessControlBlock pcbs[] = {
+    /*ProcessControlBlock pcbs[] = {
         {10, 1, 0},
         {5, 2, 1},
         {20, 3, 2}
+    };*/
+     /*ProcessControlBlock pcbs[] = {
+        {3,  1, 0},
+        {3,  2, 1},
+        {24, 3, 2}
+    };*/
+    ProcessControlBlock pcbs[] = {
+        {10, 3, 0},
+        {1, 1, 1},
+        {2, 4, 2},
+        {1, 5, 3},
+        {5, 2, 4}
     };
     size_t numPcbs = sizeof(pcbs) / sizeof(pcbs[0]);
 
-    FILE* file = fopen("valid_pcb_data.bin", "wb");
+    //FILE* file = fopen("valid_pcb_data.bin", "wb");
+    FILE* file = fopen("P.bin", "wb");
 
     fwrite(&numPcbs, sizeof(size_t), 1, file);
     if (fwrite(pcbs, sizeof(ProcessControlBlock), numPcbs, file) != numPcbs) {
