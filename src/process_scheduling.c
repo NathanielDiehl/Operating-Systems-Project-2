@@ -197,33 +197,58 @@ bool round_robin(dyn_array_t *ready_queue, ScheduleResult_t *result, size_t quan
 
 dyn_array_t *load_process_control_blocks(const char *input_file) 
 {
-    if(input_file == NULL || *input_file == '\0' || *input_file == '\n')                                       //checks for improper inputs
+    UNUSED(input_file);
+    return NULL;
+    //bad input check
+    if(input_file == NULL){
         return NULL;
-
-    FILE* f = fopen(input_file, "r");
-    if(f == NULL)                                                                                             //checks if file opens correctly
-        return NULL;
-
-    uint32_t number_of_process_control;
-    fread(&number_of_process_control, sizeof(uint32_t), 1, f);                                                 //reads lines and stores it to buffer
-
-    dyn_array_t * d = dyn_array_create(number_of_process_control, sizeof(ProcessControlBlock_t), NULL);
-    
-    ProcessControlBlock_t p;
-    for( uint32_t i = 0; i < number_of_process_control; i++){
-        fread(&p.remaining_burst_time, sizeof(uint32_t), 1, f);
-        fread(&p.priority, sizeof(uint32_t), 1, f);
-        fread(&p.arrival, sizeof(uint32_t), 1, f);
-        p.started = false;
-        if( !dyn_array_push_back(d,&p) ){
-            return NULL;
-        }
     }
 
-    fclose(f);
-    return d;
-    //UNUSED(input_file);
-    //return NULL;
+    //opening the file
+    FILE *file = fopen(input_file, "rb");
+    if (!file) {
+        perror("Error opening file");
+        return NULL;
+    }
+
+    //get the number of PCBs
+    fseek(file, 0, SEEK_END);
+    long file_size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    //create the dynamic array to store PCB data
+    size_t num_pcb = file_size / sizeof(uint32_t);
+    dyn_array_t *pcb_array = dyn_array_create(num_pcb, sizeof(ProcessControlBlock_t), pcb_destructor);
+    if (!pcb_array) {
+        fclose(file);
+        return NULL;
+    }
+
+    //temp var for proper initialization, safety, etc...
+    ProcessControlBlock_t temp_pcb;
+    //reading in the burst time
+    for (size_t i = 0; i < num_pcb; ++i) {
+        if (fread(&temp_pcb.remaining_burst_time, sizeof(uint32_t), 1, file) != 1) {
+            //if it fails...
+            pcb_array->destructor(pcb_array->array);
+            free(pcb_array);
+            fclose(file);
+            return NULL;
+        }
+
+        //initializing all the other pcb fields
+        temp_pcb.priority = 0;
+        temp_pcb.arrival = 0;
+        temp_pcb.started = false;
+
+        //copying the PCB in
+        memcpy((ProcessControlBlock_t *)pcb_array->array + i, &temp_pcb, sizeof(ProcessControlBlock_t));
+        pcb_array->size++;
+    }
+
+    //closing the file and returning the array
+    fclose(file);
+    return pcb_array;
 }
 
 bool shortest_remaining_time_first(dyn_array_t *ready_queue, ScheduleResult_t *result) 
