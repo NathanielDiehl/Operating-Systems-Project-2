@@ -13,15 +13,6 @@
 size_t current_time = 0;
 
 // Compare functions
-int compare_remaining_burst_time_preemptive(const void *a, const void *b) {
-  
-    ProcessControlBlock_t *A = (ProcessControlBlock_t *)a;
-    ProcessControlBlock_t *B = (ProcessControlBlock_t *)b;
-    bool A_arrived = A->arrival >= current_time;
-    bool B_arrived = A->arrival >= current_time;
-    
-    return (A->remaining_burst_time*A_arrived - B->remaining_burst_time*B_arrived);
-}
 int compare_remaining_burst_time(const void *a, const void *b) {
   
     ProcessControlBlock_t *A = (ProcessControlBlock_t *)a;
@@ -76,7 +67,7 @@ void run_process(ProcessControlBlock_t *pcbptr, size_t  run_time,
 
     if(!pcbptr->started){
         pcbptr->started = true;
-        *totalWaitingTime += *currentTime;
+        *totalWaitingTime += (*currentTime - pcbptr->last_time_ran );
     }
     if(pcbptr->remaining_burst_time <= run_time){
         *currentTime += pcbptr->remaining_burst_time;
@@ -86,6 +77,8 @@ void run_process(ProcessControlBlock_t *pcbptr, size_t  run_time,
     else {
         *currentTime += run_time;
         pcbptr->remaining_burst_time -= run_time;
+        pcbptr->last_time_ran = *currentTime;
+        pcbptr->started = false;
     }
 }
 
@@ -97,7 +90,6 @@ void run_ready_queue(dyn_array_t *ready_queue, ScheduleResult_t *result, size_t*
 
     for (size_t i = 0; i < *num_elements; i++) {
         pcbptr = (ProcessControlBlock_t*)dyn_array_at(ready_queue, i);
-        
         run_process(pcbptr, pcbptr->remaining_burst_time, &currentTime, &totalWaitingTime, &totalTurnaroundTime);
     }
 
@@ -114,8 +106,6 @@ bool first_come_first_serve(dyn_array_t *ready_queue, ScheduleResult_t *result) 
         return false; 
     }
 
-    //dyn_array_sort(ready_queue, compare_arrival);
-    //uint32_t currentTime = ((ProcessControlBlock_t*)dyn_array_back(ready_queue))->arrival;
     dyn_array_sort(ready_queue, compare_arrival);
     run_ready_queue(ready_queue, result, &num_elements);
     return true;
@@ -197,6 +187,7 @@ dyn_array_t *load_process_control_blocks(const char *input_file)
         fread(&p.priority, sizeof(uint32_t), 1, f);
         fread(&p.arrival, sizeof(uint32_t), 1, f);
         p.started = false;
+        p.last_time_ran = 0;
         if( !dyn_array_push_back(d,&p) ){
             return NULL;
         }
@@ -212,24 +203,33 @@ bool shortest_remaining_time_first(dyn_array_t *ready_queue, ScheduleResult_t *r
     if ( !check_inputs(ready_queue, result, &num_elements)) {             // Validate input parameters
         return false; 
     }
-    
-    dyn_array_sort(ready_queue, compare_remaining_burst_time);
+
+    dyn_array_t *use_queue = dyn_array_create(dyn_array_capacity(ready_queue), sizeof(ProcessControlBlock_t), NULL);
+    dyn_array_insert_sorted(use_queue, dyn_array_front(ready_queue), compare_remaining_burst_time); 
+    dyn_array_pop_front(ready_queue);
     ProcessControlBlock_t *pcbptr;
 
     size_t currentTime = 0;
     size_t totalWaitingTime = 0;
     size_t totalTurnaroundTime = 0;
     
-    while(!dyn_array_empty(ready_queue) ){
-        pcbptr = (ProcessControlBlock_t*)dyn_array_at(ready_queue, 0);
+    while(!dyn_array_empty(use_queue) || !dyn_array_empty(ready_queue) ){
+        pcbptr = (ProcessControlBlock_t*)dyn_array_front(use_queue);
         run_process(pcbptr, 1, &currentTime, &totalWaitingTime, &totalTurnaroundTime);
 
         if(pcbptr->remaining_burst_time > 0){
             current_time = currentTime;
-            dyn_array_insert_sorted(ready_queue, pcbptr, compare_remaining_burst_time); //compare_remaining_burst_time_preemptive);
+            dyn_array_insert_sorted(use_queue, pcbptr, compare_remaining_burst_time);
         }
-        if( !dyn_array_pop_front(ready_queue))
+        if( !dyn_array_pop_front(use_queue))
             return false;
+
+        if(!dyn_array_empty(ready_queue) && ((ProcessControlBlock_t*)dyn_array_front(ready_queue))->arrival <= currentTime){
+            dyn_array_insert_sorted(use_queue, dyn_array_front(ready_queue), compare_remaining_burst_time); 
+            totalWaitingTime    -= ((ProcessControlBlock_t*)dyn_array_front(ready_queue))->arrival;                                 //removes error from arrival
+            totalTurnaroundTime -= ((ProcessControlBlock_t*)dyn_array_front(ready_queue))->arrival;                                 //removes error from arrival
+            dyn_array_pop_front(ready_queue);
+        }
     }
     
 

@@ -183,7 +183,7 @@ TEST(shortest_job_first, GoodTotal){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
     shortest_job_first(ready_queue,&result);
-    //ASSERT_EQ(result.total_run_time,NULL);
+    ASSERT_EQ(result.total_run_time,(size_t)50);
 }
 
 TEST(priority, BadInput)
@@ -215,7 +215,7 @@ TEST(priority, GoodTotal){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
     priority(ready_queue,&result);
-    //ASSERT_EQ(result.total_run_time,NULL);
+    ASSERT_EQ(result.total_run_time,(size_t)50);
 }
 
 TEST(round_robin, BadInput)
@@ -235,7 +235,7 @@ TEST(round_robin, GoodTurnAround){
     ScheduleResult_t result;
     size_t quantum = 3;
     round_robin(ready_queue,&result,quantum);
-    ASSERT_EQ(result.average_turnaround_time,121.0);
+    ASSERT_EQ(result.average_turnaround_time,37.0);
 }
 
 TEST(round_robin, GoodWait){
@@ -243,7 +243,7 @@ TEST(round_robin, GoodWait){
     ScheduleResult_t result;
     size_t quantum = 3;
     round_robin(ready_queue,&result,quantum);
-    ASSERT_EQ(result.average_waiting_time,107.5);
+    ASSERT_EQ(result.average_waiting_time,24.5);
 }
 
 TEST(round_robin, GoodTotal){
@@ -251,7 +251,7 @@ TEST(round_robin, GoodTotal){
     ScheduleResult_t result;
     size_t quantum = 3;
     round_robin(ready_queue,&result,quantum);
-    //ASSERT_EQ(result.total_run_time,NULL);
+    ASSERT_EQ(result.total_run_time,(size_t)50);
 }
 
 
@@ -272,14 +272,14 @@ TEST(shortest_remaining_time_first, GoodTurnAround){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
     shortest_remaining_time_first(ready_queue,&result);
-    ASSERT_EQ(result.average_turnaround_time,323.75);
+    ASSERT_EQ(result.average_turnaround_time,24.25);
 }
 
 TEST(shortest_remaining_time_first, GoodWait){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
     shortest_remaining_time_first(ready_queue,&result);
-    ASSERT_EQ(result.average_waiting_time,311.25);
+    ASSERT_EQ(result.average_waiting_time,11.75);
 }
 
 
@@ -287,7 +287,7 @@ TEST(shortest_remaining_time_first, GoodTotal){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
     shortest_remaining_time_first(ready_queue,&result);
-    //ASSERT_EQ(result.total_run_time,NULL);
+    ASSERT_EQ(result.total_run_time,(size_t)50);
 }
 
 TEST(shortest_remaining_time_first, NullResult) {
