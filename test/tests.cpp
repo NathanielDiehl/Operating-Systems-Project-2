@@ -112,6 +112,7 @@ TEST(first_come_first_serve, Success) {
     dyn_array_destroy(ready_queue);
 }
 
+//Test if the input file is missing
 TEST(first_come_first_serve, MissingFile) {
     // Create an empty ready queue
     dyn_array_t* ready_queue = load_process_control_blocks("NULL.bin");
@@ -124,6 +125,7 @@ TEST(first_come_first_serve, MissingFile) {
     dyn_array_destroy(ready_queue);
 }
 
+//Test if the input file is empty
 TEST(first_come_first_serve, BadInput)
 {
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
@@ -135,6 +137,7 @@ TEST(first_come_first_serve, BadInput)
     dyn_array_destroy(ready_queue);
 }
 
+//Test if the input file is empty
 TEST(shortest_job_first, BadInput)
 {
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
@@ -146,6 +149,7 @@ TEST(shortest_job_first, BadInput)
     dyn_array_destroy(ready_queue);
 }
 
+//Test average turnaround time for shortest job first
 TEST(shortest_job_first, GoodTurnAround){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
@@ -154,6 +158,7 @@ TEST(shortest_job_first, GoodTurnAround){
     ASSERT_EQ(result.average_turnaround_time,25.5);
 }
 
+//Test average waiting time for shortest job first
 TEST(shortest_job_first, GoodWait){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
@@ -162,13 +167,16 @@ TEST(shortest_job_first, GoodWait){
     ASSERT_EQ(result.average_waiting_time,13.0);
 }
 
+//Test total run time for shortest job first
 TEST(shortest_job_first, GoodTotal){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
     shortest_job_first(ready_queue,&result);
+    //(2 + 5 + 10 + 15 + 10) / 4 = 52
     ASSERT_EQ(result.total_run_time,52.00);
 }
 
+//Test if the input file is empty
 TEST(priority, BadInput)
 {
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
@@ -180,6 +188,7 @@ TEST(priority, BadInput)
     dyn_array_destroy(ready_queue);
 }
 
+//Test average turnaround time for priority
 TEST(priority, GoodTurnAround){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
@@ -188,6 +197,7 @@ TEST(priority, GoodTurnAround){
     ASSERT_EQ(result.average_turnaround_time,28.5);
 }
 
+//Test average waiting time for priority
 TEST(priority, GoodWait){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
@@ -196,6 +206,7 @@ TEST(priority, GoodWait){
     ASSERT_EQ(result.average_waiting_time,16.0);
 }
 
+//Test total run time for priority
 TEST(priority, GoodTotal){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
@@ -203,6 +214,7 @@ TEST(priority, GoodTotal){
     ASSERT_EQ(result.total_run_time,50.00);
 }
 
+//Test if the input file is empty
 TEST(round_robin, BadInput)
 {
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
@@ -215,6 +227,7 @@ TEST(round_robin, BadInput)
     dyn_array_destroy(ready_queue);
 }
 
+//Test average turnaround time for round robin
 TEST(round_robin, GoodTurnAround){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
@@ -223,6 +236,7 @@ TEST(round_robin, GoodTurnAround){
     ASSERT_EQ(result.average_turnaround_time,4.59163e-41);
 }
 
+//Test average waiting time for round robin
 TEST(round_robin, GoodWait){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
@@ -231,6 +245,7 @@ TEST(round_robin, GoodWait){
     ASSERT_EQ(result.average_waiting_time, -5.45441e+16);
 }
 
+//Test total run time for round robin
 TEST(round_robin, GoodTotal){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
@@ -239,6 +254,7 @@ TEST(round_robin, GoodTotal){
     ASSERT_EQ(result.total_run_time,0.0);
 }
 
+//Test if the input file is empty
 TEST(shortest_remaining_time_first, BadInput)
 {
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
@@ -250,8 +266,7 @@ TEST(shortest_remaining_time_first, BadInput)
     dyn_array_destroy(ready_queue);
 }
 
-
-
+//Test average turnaround time for shortest remaining time first
 TEST(shortest_remaining_time_first, GoodTurnAround){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
@@ -259,21 +274,25 @@ TEST(shortest_remaining_time_first, GoodTurnAround){
     ASSERT_EQ(result.average_turnaround_time,25.5);
 }
 
+//Test average waiting time for shortest remaining time first
 TEST(shortest_remaining_time_first, GoodWait){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
     shortest_remaining_time_first(ready_queue,&result);
+    //(2 + 5 + 10 + 15 + 10) / 4 = 52 / 4 = 13
     ASSERT_EQ(result.average_waiting_time,13.0);
 }
 
-
+//Test total run time for shortest remaining time first
 TEST(shortest_remaining_time_first, GoodTotal){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
     shortest_remaining_time_first(ready_queue,&result);
+    //(2 + 5 + 10 + 15 + 10) / 4 = 52
     ASSERT_EQ(result.total_run_time,52.0);
 }
 
+//Test if the input file is empty
 TEST(shortest_remaining_time_first, NullResult) {
     dyn_array_t *ready_queue = dyn_array_create(0, sizeof(ProcessControlBlock_t), NULL);
     ScheduleResult_t *result = NULL;
@@ -281,6 +300,7 @@ TEST(shortest_remaining_time_first, NullResult) {
     dyn_array_destroy(ready_queue);
 }
 
+//Test if the input file is empty
 TEST(shortest_remaining_time_first, NullReadyQueue){
     dyn_array_t *ready_queue = NULL;
     ScheduleResult_t *result = new ScheduleResult_t;
