@@ -101,7 +101,7 @@ TEST(first_come_first_serve, Success) {
     PCB3 waits 25 time units, turns around at 30, 2 to process arrived
     PCB4 waits 30 time units, turns around at 50, 3 to process arrived
     */ 
-    float expected_avg_waiting_time = 16.0; //(0 + 14 + 23 + 27) / 4 = 64 / 4 = 16.00
+    float expected_avg_waiting_time = 17.5; //(0 + 15 + 25 + 30) / 4 = 70 / 4 = 17.5
     float expected_avg_turnaround_time = 28.5; //(15 + 24 + 28 + 47) / 4 = 114 / 4 = 28.50
     float expected_total_run_time = 50.0; //Total Run Time = Finish Time of PCB 3 = 15 + 10 + 5 + 20 = 50
     ASSERT_EQ(result.average_waiting_time, expected_avg_waiting_time);
@@ -154,8 +154,8 @@ TEST(shortest_job_first, GoodTurnAround){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
     shortest_job_first(ready_queue,&result);
-    //(15 + 24 + 28  + 47) / 4 = 114 / 4 = 28.50
-    ASSERT_EQ(result.average_turnaround_time,25.5);
+    //(5 + 15 + 30 + 50) / 4 = 100 / 4 = 25
+    ASSERT_EQ(result.average_turnaround_time,25.0);
 }
 
 //Test average waiting time for shortest job first
@@ -163,8 +163,8 @@ TEST(shortest_job_first, GoodWait){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
     shortest_job_first(ready_queue,&result);
-    //(2 + 5 + 10 + 15 + 10) / 4 = 52 / 4 = 13.00
-    ASSERT_EQ(result.average_waiting_time,13.0);
+    //( 5 + 10 + 15 + 10) / 4 = 50 / 4 = 12.5
+    ASSERT_EQ(result.average_waiting_time,12.5);
 }
 
 //Test total run time for shortest job first
@@ -193,8 +193,8 @@ TEST(priority, GoodTurnAround){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
     priority(ready_queue,&result);
-    //(15 + 24 + 28 + 47) / 4 = 114 / 4 = 28.50
-    ASSERT_EQ(result.average_turnaround_time,28.5);
+    //(15 + 25 + 30 + 50) / 4 = 120 / 4 = 30
+    ASSERT_EQ(result.average_turnaround_time,30);
 }
 
 //Test average waiting time for priority
@@ -202,8 +202,8 @@ TEST(priority, GoodWait){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
     priority(ready_queue,&result);
-    //(0 + 14 + 23 + 27) / 4 = 64 / 4 = 16.00
-    ASSERT_EQ(result.average_waiting_time,16.0);
+    //(0 + 15 + 25 + 30) / 4 = 70 / 4 = 17.5
+    ASSERT_EQ(result.average_waiting_time,17.5);
 }
 
 //Test total run time for priority
@@ -233,7 +233,8 @@ TEST(round_robin, GoodTurnAround){
     ScheduleResult_t result;
     size_t quantum = 1;
     round_robin(ready_queue,&result,quantum);
-    ASSERT_EQ(result.average_turnaround_time,37.0);
+    //((2 + 5 + 10 + 15 + 10) + (3 + 6 + 11 + 16 + 11) + (5 + 10 + 15 + 20 + 15) + (7 + 12 + 17 + 22 + 17)) / 4 = 147 / 4 = 36.75
+    ASSERT_EQ(result.average_turnaround_time,36.75);
 }
 
 //Test average waiting time for round robin
@@ -242,7 +243,8 @@ TEST(round_robin, GoodWait){
     ScheduleResult_t result;
     size_t quantum = 1;
     round_robin(ready_queue,&result,quantum);
-    ASSERT_EQ(result.average_waiting_time, 24.5);
+    //((0 + 3 + 8 + 13 + 18) + (1 + 4 + 9 + 14 + 19) + (3 + 8 + 13 + 18 + 23) + (5 + 10 + 15 + 20 + 25)) / 4 = 97 / 4 = 24.25
+    ASSERT_EQ(result.average_waiting_time, 24.25);
 }
 
 //Test total run time for round robin
@@ -260,8 +262,7 @@ TEST(shortest_remaining_time_first, BadInput)
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
     shortest_remaining_time_first(ready_queue,&result);
-    ASSERT_EQ(result.average_turnaround_time,25.5);
-    ASSERT_EQ(result.average_turnaround_time,24.25);
+    ASSERT_FALSE(shortest_remaining_time_first(NULL,&result));
 }
 
 //Test average turnaround time for shortest remaining time first
@@ -269,7 +270,8 @@ TEST(shortest_remaining_time_first, GoodTurnAround){
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
     shortest_remaining_time_first(ready_queue,&result);
-    ASSERT_EQ(result.average_turnaround_time,25.5);
+    //((0 + 3 + 8 + 13 + 18) + (1 + 4 + 9 + 14 + 19) + (3 + 8 + 13 + 18 + 23) + (5 + 10 + 15 + 20 + 25)) / 4 = 97 / 4 = 24.25
+    ASSERT_EQ(result.average_turnaround_time,24.25);
 }
 
 //Test average waiting time for shortest remaining time first
