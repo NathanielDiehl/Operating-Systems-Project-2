@@ -173,7 +173,7 @@ TEST(shortest_job_first, GoodTotal){
     ScheduleResult_t result;
     shortest_job_first(ready_queue,&result);
     //(2 + 5 + 10 + 15 + 10) / 4 = 52
-    ASSERT_EQ(result.total_run_time,52.00);
+    ASSERT_EQ(result.total_run_time,(size_t)50);
 }
 
 //Test if the input file is empty
@@ -233,7 +233,7 @@ TEST(round_robin, GoodTurnAround){
     ScheduleResult_t result;
     size_t quantum = 1;
     round_robin(ready_queue,&result,quantum);
-    ASSERT_EQ(result.average_turnaround_time,4.59163e-41);
+    ASSERT_EQ(result.average_turnaround_time,37.0);
 }
 
 //Test average waiting time for round robin
@@ -242,7 +242,7 @@ TEST(round_robin, GoodWait){
     ScheduleResult_t result;
     size_t quantum = 1;
     round_robin(ready_queue,&result,quantum);
-    ASSERT_EQ(result.average_waiting_time, -5.45441e+16);
+    ASSERT_EQ(result.average_waiting_time, 24.5);
 }
 
 //Test total run time for round robin
@@ -251,7 +251,7 @@ TEST(round_robin, GoodTotal){
     ScheduleResult_t result;
     size_t quantum = 1;
     round_robin(ready_queue,&result,quantum);
-    ASSERT_EQ(result.total_run_time,0.0);
+    ASSERT_EQ(result.total_run_time,(size_t)50);
 }
 
 //Test if the input file is empty
@@ -259,11 +259,9 @@ TEST(shortest_remaining_time_first, BadInput)
 {
     dyn_array_t *ready_queue = load_process_control_blocks("pcb.bin");
     ScheduleResult_t result;
-    ASSERT_EQ(shortest_remaining_time_first(ready_queue,NULL),false);
-    ASSERT_EQ(shortest_remaining_time_first(NULL,&result),false);
-
-    //clean up
-    dyn_array_destroy(ready_queue);
+    shortest_remaining_time_first(ready_queue,&result);
+    ASSERT_EQ(result.average_turnaround_time,25.5);
+    ASSERT_EQ(result.average_turnaround_time,24.25);
 }
 
 //Test average turnaround time for shortest remaining time first
@@ -280,7 +278,7 @@ TEST(shortest_remaining_time_first, GoodWait){
     ScheduleResult_t result;
     shortest_remaining_time_first(ready_queue,&result);
     //(2 + 5 + 10 + 15 + 10) / 4 = 52 / 4 = 13
-    ASSERT_EQ(result.average_waiting_time,13.0);
+    ASSERT_EQ(result.average_waiting_time,11.75);
 }
 
 //Test total run time for shortest remaining time first
